@@ -1,10 +1,6 @@
 package com.farad.client;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,9 +9,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 public class StartPageController {
-    @FXML
-    private Label authResultText;
-
+    private Connection conn = StartPage.conn;
     @FXML
     private TextField loginField;
 
@@ -31,24 +25,19 @@ public class StartPageController {
             alert.setContentText("Заполните все поля!");
             alert.show();
         } else {
-            String serverAddress = "localhost"; // Адрес сервера
-            int portNumber = 8080; // Порт сервера
-
-            try (
-                    Socket socket = new Socket(serverAddress, portNumber);
-                    PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            ) {
+            //Создание объекта для работы с сервером
+            conn = Connection.getInstance("localhost", 8080);
+            try {
                 //Отправка данных
                 String userInput;
                 userInput = "auth " + loginField.getText().trim() + " " + passwordField.getText().trim();
-                out.println(userInput);
+                conn.sendRequest(userInput);
 
                 //Получение результата
-                String answer = in.readLine();
+                String answer = conn.getRequest();
 
                 if (answer.equals("success")) {
-                    if (in.readLine().equals("1")) {
+                    if (conn.getRequest().equals("1")) {
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("admin-page.fxml"));
                         Scene scene = new Scene(loader.load(), 1500, 800);
                         Stage newStage = new Stage();
@@ -57,7 +46,7 @@ public class StartPageController {
                         newStage.setScene(scene);
                         newStage.show();
 
-                        ((Stage) (((Button) event.getSource()).getScene().getWindow())).close();
+                        ((Button) event.getSource()).getScene().getWindow().hide();
                     }
                 }
             } catch (IOException e) {
