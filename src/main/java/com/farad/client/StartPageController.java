@@ -4,30 +4,34 @@ import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 public class StartPageController {
-    private Connection conn = StartPage.conn;
+    private Stage primaryStage;
     @FXML
     private TextField loginField;
 
     @FXML
     private PasswordField passwordField;
 
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+    }
+
     @FXML
     protected void enterButtonOnPressed(ActionEvent event) {
-
         if (loginField.getText().isEmpty() || passwordField.getText().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText(null);
             alert.setContentText("Заполните все поля!");
             alert.show();
         } else {
-            //Создание объекта для работы с сервером
-            conn = Connection.getInstance("localhost", 8080);
             try {
+                //Создание объекта для работы с сервером
+                Connection conn = Connection.getInstance("localhost", 8080);
                 //Отправка данных
                 String userInput;
                 userInput = "auth " + loginField.getText().trim() + " " + passwordField.getText().trim();
@@ -38,15 +42,17 @@ public class StartPageController {
 
                 if (answer.equals("success")) {
                     if (conn.getRequest().equals("1")) {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("admin-page.fxml"));
-                        Scene scene = new Scene(loader.load(), 1500, 800);
                         Stage newStage = new Stage();
-                        newStage.setTitle("Admin Panel: " + loginField.getText().trim());
-                        newStage.setResizable(false);
-                        newStage.setScene(scene);
-                        newStage.show();
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("admin-page.fxml"));
 
-                        ((Button) event.getSource()).getScene().getWindow().hide();
+                        Parent root = loader.load();
+                        Scene scene = new Scene(root);
+
+                        newStage.setScene(scene);
+                        newStage.setTitle("Admin Panel: " + loginField.getText().trim());
+
+                        primaryStage.close();
+                        newStage.show();
                     }
                 }
             } catch (IOException e) {
