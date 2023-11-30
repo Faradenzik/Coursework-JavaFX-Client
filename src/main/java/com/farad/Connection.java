@@ -1,4 +1,4 @@
-package com.farad.client;
+package com.farad;
 
 import java.io.*;
 import java.net.Socket;
@@ -13,21 +13,19 @@ public final class Connection {
     private PrintWriter out;
     private BufferedReader in;
     private ObjectOutputStream outObj;
-    private ObjectInputStream inObj;
+    public static ObjectInputStream inObj;
 
     private Connection(String address, int port) throws IOException {
-
-            socket = new Socket(address, port);
-            out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            outObj = new ObjectOutputStream(socket.getOutputStream());
-            inObj = new ObjectInputStream(socket.getInputStream());
-
+        socket = new Socket(address, port);
+        out = new PrintWriter(socket.getOutputStream(), true);
+        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        outObj = new ObjectOutputStream(socket.getOutputStream());
+        inObj = new ObjectInputStream(socket.getInputStream());
     }
 
     public static Connection getInstance(String address, int port) throws IOException {
         if (instance == null) {
-            instance = new Connection( address, port);
+            instance = new Connection(address, port);
         }
         return instance;
     }
@@ -50,14 +48,14 @@ public final class Connection {
         return request;
     }
 
-    public List<?> getObjects() {
-        List<?> lst = null;
+    public DataPacket<?> getObjects() {
+        DataPacket<?> recieved;
         try {
-            lst = (List<?>) inObj.readObject();
+            recieved = (DataPacket<?>) inObj.readObject();
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        return lst;
+        return recieved;
     }
 
     public void close() {

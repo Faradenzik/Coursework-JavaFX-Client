@@ -4,9 +4,9 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.farad.client.AdminPageController">
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.farad.ShowUsersController">
    <children>
-      <TableView fx:id="tableUsers" layoutX="240.0" layoutY="21.0" prefHeight="400.0" prefWidth="525.0" AnchorPane.leftAnchor="240.0" AnchorPane.rightAnchor="239.0">
+      <TableView fx:id="tableUsers" editable="true" layoutX="240.0" layoutY="21.0" prefHeight="400.0" prefWidth="525.0" AnchorPane.leftAnchor="240.0" AnchorPane.rightAnchor="239.0">
         <columns>
           <TableColumn fx:id="idTable" minWidth="50.0" prefWidth="75.0" text="ID" />
           <TableColumn fx:id="usernameTable" minWidth="120.0" prefWidth="150.0" text="Username" />

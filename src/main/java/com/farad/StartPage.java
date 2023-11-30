@@ -1,4 +1,4 @@
-package com.farad.client;
+package com.farad;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

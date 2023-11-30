@@ -1,4 +1,4 @@
-package com.farad.client;
+package com.farad;
 
 import java.io.IOException;
 import javafx.event.ActionEvent;
