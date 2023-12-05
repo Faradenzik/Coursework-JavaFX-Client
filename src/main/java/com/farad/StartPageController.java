@@ -1,6 +1,7 @@
 package com.farad;
 
 import java.io.IOException;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +9,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+
+import static com.farad.StartPage.getAlert;
 
 public class StartPageController {
     private Stage primaryStage;
@@ -24,10 +27,7 @@ public class StartPageController {
     @FXML
     protected void enterButtonOnPressed(ActionEvent event) {
         if (loginField.getText().isEmpty() || passwordField.getText().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText(null);
-            alert.setContentText("Заполните все поля!");
-            alert.show();
+            getAlert("warning", "Заполните все поля!");
         } else {
             try {
                 //Создание объекта для работы с сервером
@@ -56,10 +56,7 @@ public class StartPageController {
                     }
                 }
             } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText(null);
-                alert.setContentText("Не удалось подключиться к серверу");
-                alert.show();
+                getAlert("error", "Не удалось подключиться к серверу");
             }
         }
     }

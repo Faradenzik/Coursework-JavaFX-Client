@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class Connection {
-    private final Logger l = Logger.getLogger(Connection.class.getName());
+    private final Logger l = Logger.getLogger(getClass().getName());
     private static Connection instance;
     private Socket socket;
     private PrintWriter out;
@@ -48,14 +48,16 @@ public final class Connection {
         return request;
     }
 
-    public DataPacket<?> getObjects() {
-        DataPacket<?> recieved;
+    public List<?> getObjects() throws IOException, ClassNotFoundException {
+        return (List<?>) inObj.readObject();
+    }
+
+    public void sendObjects(List<?> sendingList) {
         try {
-            recieved = (DataPacket<?>) inObj.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            outObj.writeObject(sendingList);
+        } catch (IOException e) {
+            l.log(Level.WARNING, "Ошибка в отправке данных");
         }
-        return recieved;
     }
 
     public void close() {

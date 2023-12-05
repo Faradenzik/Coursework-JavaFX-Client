@@ -9,23 +9,29 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class AdminPageController {
+    private final Logger l = Logger.getLogger(getClass().getName());
+
     @FXML
     private AnchorPane adminMain;
 
     @FXML
-    void showFirst(ActionEvent event) {
+    void showFirst() throws IOException, ClassNotFoundException {
         Connection conn;
         try {
             conn = Connection.getInstance("localhost", 8080);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            l.log(Level.WARNING, "Ошибка подключения к серверу.");
+            return;
         }
 
-        conn.sendRequest("get");
-        DataPacket<User> dataPacket = (DataPacket<User>) conn.getObjects();
-        List<User> userList = dataPacket.getData();
+        conn.sendRequest("get users");
+        List<?> received = conn.getObjects();
+        List<User> userList = (List<User>) received;
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("showUsers.fxml"));
         Parent node;
