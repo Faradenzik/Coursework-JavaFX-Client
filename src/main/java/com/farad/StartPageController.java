@@ -5,6 +5,7 @@ import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -46,7 +47,7 @@ public class StartPageController {
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("admin-page.fxml"));
 
                         Parent root = loader.load();
-                        Scene scene = new Scene(root);
+                        Scene scene = new Scene(root, 1500, 800);
 
                         newStage.setScene(scene);
                         newStage.setTitle("Admin Panel: " + loginField.getText().trim());

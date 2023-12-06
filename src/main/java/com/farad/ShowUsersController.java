@@ -1,5 +1,6 @@
 package com.farad;
 
+import com.farad.tables.Customer;
 import com.farad.tables.User;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -51,10 +52,13 @@ public class ShowUsersController {
     private ButtonBar buttonBarChangeDel;
 
     @FXML
-    private ButtonBar buttonBarSaveCancel;
+    public ButtonBar buttonBarSaveCancel;
 
     @FXML
     private Pane creatingPane;
+
+    @FXML
+    private Pane filtersPane;
 
     @FXML
     private Button addButton;
@@ -88,23 +92,8 @@ public class ShowUsersController {
 
     private User selectedItem;
     private ObservableList<User> users;
-
     private ObservableList<User> filteredList;
-
-
-    public void setTable(List<User> userList) {
-        users = FXCollections.observableList(userList);
-
-        idTable.setCellValueFactory(new PropertyValueFactory<User, Integer>("id"));
-        usernameTable.setCellValueFactory(new PropertyValueFactory<User, String>("username"));
-        passwordTable.setCellValueFactory(new PropertyValueFactory<User, String>("password"));
-        roleTable.setCellValueFactory(new PropertyValueFactory<User, Integer>("role"));
-
-        tableUsers.setItems(users);
-    }
-
-    @FXML
-    void setFilters() {
+    private final ChangeListener<String> textChangeListener = (observable, oldValue, newValue) -> {
         String id = idFilterField.getText().trim();
         String username = usernameFilterField.getText().trim();
         String password = passwordFilterField.getText().trim();
@@ -112,16 +101,68 @@ public class ShowUsersController {
 
         FilteredList<User> filtered = new FilteredList<>(users, user -> true);
 
-        filtered.setPredicate(user -> user.getUsername().toLowerCase().contains(username));
+        filtered.setPredicate(user -> user.getUsername().toLowerCase().contains(username) && String.valueOf(user.getId()).contains(id)
+                && user.getPassword().toLowerCase().contains(password) && String.valueOf(user.getRole()).contains(role));
 
-        tableUsers.setItems(filtered);
+        filteredList = FXCollections.observableList(filtered);
+
+        if (id.isEmpty() && username.isEmpty() && password.isEmpty() && role.isEmpty()) {
+            tableUsers.setItems(users);
+        } else {
+            tableUsers.setItems(filteredList);
+        }
+    };
+
+
+    public void setTable(List<User> userList) {
+        users = FXCollections.observableList(userList);
+
+        idTable.setCellValueFactory(new PropertyValueFactory<>("id"));
+        usernameTable.setCellValueFactory(new PropertyValueFactory<>("username"));
+        passwordTable.setCellValueFactory(new PropertyValueFactory<>("password"));
+        roleTable.setCellValueFactory(new PropertyValueFactory<>("role"));
+
+        tableUsers.setItems(users);
+    }
+
+    @FXML
+    private void initialize() {
+        conn.sendRequest("get users");
+        List<?> received;
+        try {
+            received = conn.getObjects();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        List<User> userList = (List<User>) received;
+
+        setTable(userList);
+
+        idFilterField.textProperty().addListener(textChangeListener);
+        usernameFilterField.textProperty().addListener(textChangeListener);
+        passwordFilterField.textProperty().addListener(textChangeListener);
+        roleFilterField.textProperty().addListener(textChangeListener);
+    }
+
+    void edMode(boolean tf) {
+        if (tf) {
+            creatingPane.setVisible(true);
+            addButton.setDisable(true);
+            buttonBarChangeDel.setDisable(true);
+            buttonBarSaveCancel.setDisable(true);
+            filtersPane.setDisable(true);
+        } else {
+            creatingPane.setVisible(false);
+            addButton.setDisable(false);
+            buttonBarChangeDel.setDisable(false);
+            buttonBarSaveCancel.setDisable(false);
+            filtersPane.setDisable(false);
+        }
     }
 
     @FXML //кнопка Добавить
     void addButton() {
-        creatingPane.setVisible(true);
-        addButton.setDisable(true);
-        buttonBarChangeDel.setDisable(true);
+        edMode(true);
 
         saveButton.setOnAction(this::createUser);
     }
@@ -131,17 +172,26 @@ public class ShowUsersController {
             getAlert("warning", "Заполните поля!");
             return;
         }
-        User user = new User(Integer.parseInt(idField.getText().trim()), usernameField.getText().trim(), passwordField.getText().trim(), Integer.parseInt(roleField.getText().trim()));
-        users.add(user);
+
+        if (idField.getText().isEmpty()) {
+            idField.setText("0");
+        }
+
+        try {
+            User user = new User(Integer.parseInt(idField.getText().trim()), usernameField.getText().trim(),
+                    passwordField.getText().trim(), Integer.parseInt(roleField.getText().trim()));
+            users.add(user);
+        } catch(Exception e) {
+            getAlert("warning", "Проверьте введенные значения!");
+            return;
+        }
 
         idField.clear();
         usernameField.clear();
         passwordField.clear();
         roleField.clear();
 
-        creatingPane.setVisible(false);
-        addButton.setDisable(false);
-        buttonBarChangeDel.setDisable(false);
+        edMode(false);
 
         buttonBarSaveCancel.setVisible(true);
     }
@@ -153,9 +203,7 @@ public class ShowUsersController {
         passwordField.clear();
         roleField.clear();
         
-        creatingPane.setVisible(false);
-        addButton.setDisable(false);
-        buttonBarChangeDel.setDisable(false);
+        edMode(false);
     }
 
     @FXML //кнопка Изменить
@@ -171,27 +219,38 @@ public class ShowUsersController {
         passwordField.setText(selectedItem.getPassword());
         roleField.setText(String.valueOf(selectedItem.getRole()));
 
-        creatingPane.setVisible(true);
-        addButton.setDisable(true);
-        buttonBarChangeDel.setDisable(true);
+        edMode(true);
 
         saveButton.setOnAction(this::changeUser);
     }
 
     void changeUser(ActionEvent event) {
-        User user = new User(Integer.parseInt(idField.getText().trim()), usernameField.getText().trim(), passwordField.getText().trim(), Integer.parseInt(roleField.getText().trim()));
-        users.set(users.indexOf(selectedItem), user);
-        tableUsers.refresh();
+        if (usernameField.getText().isEmpty() || passwordField.getText().isEmpty() || roleField.getText().isEmpty()) {
+            getAlert("warning", "Заполните поля!");
+            return;
+        }
 
+        if (idField.getText().isEmpty()) {
+            idField.setText("0");
+        }
+
+        try {
+            User user = new User(Integer.parseInt(idField.getText().trim()), usernameField.getText().trim(),
+                    passwordField.getText().trim(), Integer.parseInt(roleField.getText().trim()));
+            users.set(users.indexOf(selectedItem), user);
+        } catch(Exception e) {
+            getAlert("warning", "Проверьте введенные значения!");
+            return;
+        }
+
+        tableUsers.refresh();
 
         idField.clear();
         usernameField.clear();
         passwordField.clear();
         roleField.clear();
 
-        creatingPane.setVisible(false);
-        buttonBarChangeDel.setDisable(false);
-        addButton.setDisable(false);
+        edMode(false);
 
         buttonBarSaveCancel.setVisible(true);
     }
@@ -221,6 +280,14 @@ public class ShowUsersController {
         Thread.sleep(100);
         conn.sendObjects(usersList);
 
+        String result = conn.getRequest();
+        if (result.equals("success")) {
+            initialize();
+        } else {
+            getAlert("error", result);
+            return;
+        }
+
         buttonBarSaveCancel.setVisible(false);
     }
 
@@ -229,16 +296,7 @@ public class ShowUsersController {
         Optional<ButtonType> result = getAlert("confirmation", "Вы действительно хотите отменить изменения?");
         if (result.isPresent() && result.get() == ButtonType.OK) {
 
-            conn.sendRequest("get users");
-            List<?> received;
-            try {
-                received = conn.getObjects();
-            } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-            List<User> userList = (List<User>) received;
-
-            setTable(userList);
+            initialize();
             buttonBarSaveCancel.setVisible(false);
         }
     }
