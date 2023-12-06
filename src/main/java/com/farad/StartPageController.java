@@ -32,7 +32,7 @@ public class StartPageController {
         } else {
             try {
                 //Создание объекта для работы с сервером
-                Connection conn = Connection.getInstance("localhost", 8080);
+                Connection conn = Connection.getInstance();
                 //Отправка данных
                 String userInput;
                 userInput = "auth " + loginField.getText().trim() + " " + passwordField.getText().trim();
@@ -42,19 +42,27 @@ public class StartPageController {
                 String answer = conn.getRequest();
 
                 if (answer.equals("success")) {
-                    if (conn.getRequest().equals("1")) {
-                        Stage newStage = new Stage();
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("admin-page.fxml"));
+                    String role = conn.getRequest();
 
-                        Parent root = loader.load();
-                        Scene scene = new Scene(root, 1500, 800);
+                    switch(role) {
+                        case "admin": {
+                            Stage newStage = new Stage();
+                            FXMLLoader loader = new FXMLLoader(getClass().getResource("admin-page.fxml"));
 
-                        newStage.setScene(scene);
-                        newStage.setTitle("Admin Panel: " + loginField.getText().trim());
+                            Parent root = loader.load();
+                            Scene scene = new Scene(root, 1500, 800);
 
-                        primaryStage.close();
-                        newStage.show();
+                            newStage.setScene(scene);
+                            newStage.setTitle("Admin Panel: " + loginField.getText().trim());
+
+                            primaryStage.close();
+                            newStage.show();
+
+                            break;
+                        }
                     }
+                } else {
+                    getAlert("error", "Проверьте правильность введенных данных");
                 }
             } catch (IOException e) {
                 getAlert("error", "Не удалось подключиться к серверу");

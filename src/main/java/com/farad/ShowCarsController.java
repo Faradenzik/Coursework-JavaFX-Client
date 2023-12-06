@@ -23,7 +23,7 @@ public class ShowCarsController {
 
     static {
         try {
-            conn = Connection.getInstance("localhost", 8080);
+            conn = Connection.getInstance();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -323,7 +323,6 @@ public class ShowCarsController {
     void cancelChanges() {
         Optional<ButtonType> result = getAlert("confirmation", "Вы действительно хотите отменить изменения?");
         if (result.isPresent() && result.get() == ButtonType.OK) {
-
             initialize();
             buttonBarSaveCancel.setVisible(false);
         }

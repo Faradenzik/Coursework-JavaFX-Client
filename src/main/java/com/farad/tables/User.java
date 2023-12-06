@@ -7,9 +7,9 @@ public class User implements Serializable {
     private int id;
     private String username;
     private String password;
-    private int role;
+    private String role;
 
-    public User(int id, String username, String password, int role) {
+    public User(int id, String username, String password, String role) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -28,7 +28,7 @@ public class User implements Serializable {
         return password;
     }
 
-    public int getRole() {
+    public String getRole() {
         return role;
     }
 

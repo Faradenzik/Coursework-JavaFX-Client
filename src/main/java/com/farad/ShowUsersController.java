@@ -27,7 +27,7 @@ public class ShowUsersController {
 
     static {
         try {
-            conn = Connection.getInstance("localhost", 8080);
+            conn = Connection.getInstance();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -179,7 +179,7 @@ public class ShowUsersController {
 
         try {
             User user = new User(Integer.parseInt(idField.getText().trim()), usernameField.getText().trim(),
-                    passwordField.getText().trim(), Integer.parseInt(roleField.getText().trim()));
+                    passwordField.getText().trim(), roleField.getText().trim());
             users.add(user);
         } catch(Exception e) {
             getAlert("warning", "Проверьте введенные значения!");
@@ -236,7 +236,7 @@ public class ShowUsersController {
 
         try {
             User user = new User(Integer.parseInt(idField.getText().trim()), usernameField.getText().trim(),
-                    passwordField.getText().trim(), Integer.parseInt(roleField.getText().trim()));
+                    passwordField.getText().trim(), roleField.getText().trim());
             users.set(users.indexOf(selectedItem), user);
         } catch(Exception e) {
             getAlert("warning", "Проверьте введенные значения!");

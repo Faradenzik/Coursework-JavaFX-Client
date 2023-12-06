@@ -9,6 +9,9 @@ import java.util.logging.Logger;
 public final class Connection {
     private final Logger l = Logger.getLogger(getClass().getName());
     private static Connection instance;
+
+    private static final String address = "localhost";
+    private static final int port = 8080;
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
@@ -23,7 +26,7 @@ public final class Connection {
         inObj = new ObjectInputStream(socket.getInputStream());
     }
 
-    public static Connection getInstance(String address, int port) throws IOException {
+    public static Connection getInstance() throws IOException {
         if (instance == null) {
             instance = new Connection(address, port);
         }

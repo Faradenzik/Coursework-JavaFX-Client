@@ -23,7 +23,7 @@ public class ShowCustomersController {
 
     static {
         try {
-            conn = Connection.getInstance("localhost", 8080);
+            conn = Connection.getInstance();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
