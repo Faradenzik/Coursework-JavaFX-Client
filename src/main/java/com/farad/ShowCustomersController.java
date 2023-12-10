@@ -7,9 +7,14 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,46 +44,22 @@ public class ShowCustomersController {
     private ButtonBar buttonBarSaveCancel;
 
     @FXML
-    private Pane creatingPane;
-
-    @FXML
-    private TextField emailField;
-
-    @FXML
     private TextField emailFilterField;
 
     @FXML
     private Pane filtersPane;
 
     @FXML
-    private TextField idField;
-
-    @FXML
     private TextField idFilterField;
-
-    @FXML
-    private TextField nameField;
 
     @FXML
     private TextField nameFilterField;
 
     @FXML
-    private TextField patronymicField;
-
-    @FXML
     private TextField patronymicFilterField;
 
     @FXML
-    private TextField phoneField;
-
-    @FXML
     private TextField phoneFilterField;
-
-    @FXML
-    private Button saveButton;
-
-    @FXML
-    private TextField surnameField;
 
     @FXML
     private TextField surnameFilterField;
@@ -108,6 +89,10 @@ public class ShowCustomersController {
     private ObservableList<Customer> customers;
     private ObservableList<Customer> filteredList;
     private final ChangeListener<String> textChangeListener = (observable, oldValue, newValue) -> {
+        setFilters();
+    };
+
+    private void setFilters() {
         String id = idFilterField.getText().trim();
         String name = nameFilterField.getText().trim();
         String surname = surnameFilterField.getText().trim();
@@ -128,10 +113,10 @@ public class ShowCustomersController {
         } else {
             tableCustomers.setItems(filteredList);
         }
-    };
+    }
 
 
-    public void setTable(List<Customer> customersList) {
+    private void setTable(List<Customer> customersList) {
         customers = FXCollections.observableList(customersList);
 
         idTable.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -165,15 +150,13 @@ public class ShowCustomersController {
         emailFilterField.textProperty().addListener(textChangeListener);
     }
 
-    void edMode(boolean tf) {
+    private void edMode(boolean tf) {
         if (tf) {
-            creatingPane.setVisible(true);
             addButton.setDisable(true);
             buttonBarChangeDel.setDisable(true);
             buttonBarSaveCancel.setDisable(true);
             filtersPane.setDisable(true);
         } else {
-            creatingPane.setVisible(false);
             addButton.setDisable(false);
             buttonBarChangeDel.setDisable(false);
             buttonBarSaveCancel.setDisable(false);
@@ -182,109 +165,77 @@ public class ShowCustomersController {
     }
 
     @FXML //кнопка Добавить
-    void addButton() {
+    private void addButton() throws IOException {
         edMode(true);
 
-        saveButton.setOnAction(this::createCustomer);
-    }
+        Stage addUserStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("edCustomer.fxml"));
 
-    void createCustomer(ActionEvent event) {
-        if (nameField.getText().isEmpty() || surnameField.getText().isEmpty() || patronymicField.getText().isEmpty() || phoneField.getText().isEmpty()) {
-            getAlert("warning", "Заполните поля!");
-            return;
+        Parent root = loader.load();
+        Scene scene = new Scene(root, 240, 380);
+
+        addUserStage.setScene(scene);
+        addUserStage.setResizable(false);
+        addUserStage.initModality(Modality.APPLICATION_MODAL);
+        addUserStage.setTitle("Создание заказчика");
+
+        EdCustomerController controller = loader.getController();
+        controller.setDialogStage(addUserStage);
+
+        addUserStage.showAndWait();
+
+        if (controller.getResult() != null) {
+            customers.add(controller.getResult());
+            setFilters();
+            buttonBarSaveCancel.setVisible(true);
         }
-
-        if(idField.getText().isEmpty()) {
-            idField.setText("0");
-        }
-
-        try {
-            Customer customer = new Customer(Integer.parseInt(idField.getText()), nameField.getText().trim(), surnameField.getText().trim(), patronymicField.getText().trim(),
-                    phoneField.getText().trim(), emailField.getText().trim());
-            customers.add(customer);
-        } catch (Exception e) {
-            getAlert("warning", "Проверьте введенные значения!");
-            return;
-        }
-
-        idField.clear();
-        nameField.clear();
-        surnameField.clear();
-        patronymicField.clear();
-        phoneField.clear();
-        emailField.clear();
-
-        edMode(false);
-
-        buttonBarSaveCancel.setVisible(true);
-    }
-
-    @FXML //кнопка Отмена в временной панельке
-    void cancel() {
-        idField.clear();
-        nameField.clear();
-        surnameField.clear();
-        patronymicField.clear();
-        phoneField.clear();
-        emailField.clear();
 
         edMode(false);
     }
 
     @FXML //кнопка Изменить
-    void changeButton() {
+    private void changeButton() throws IOException {
         selectedItem = tableCustomers.getSelectionModel().getSelectedItem();
         if (selectedItem == null) {
             getAlert("warning", "Сначала выберите элемент");
             return;
         }
 
-        idField.setText(String.valueOf(selectedItem.getId()));
-        nameField.setText(selectedItem.getName());
-        surnameField.setText(selectedItem.getSurname());
-        patronymicField.setText(String.valueOf(selectedItem.getPatronymic()));
-        phoneField.setText(selectedItem.getPhone());
-        emailField.setText(selectedItem.getEmail());
-
         edMode(true);
 
-        saveButton.setOnAction(this::changeUser);
-    }
+        Stage addCustomerStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("edCustomer.fxml"));
 
-    void changeUser(ActionEvent event) {
-        if (nameField.getText().isEmpty() || surnameField.getText().isEmpty() || patronymicField.getText().isEmpty() || phoneField.getText().isEmpty()) {
-            getAlert("warning", "Заполните поля!");
-            return;
+        Parent root = loader.load();
+        Scene scene = new Scene(root, 240, 380);
+
+        addCustomerStage.setScene(scene);
+        addCustomerStage.setResizable(false);
+        addCustomerStage.initModality(Modality.APPLICATION_MODAL);
+        addCustomerStage.setTitle("Редактор заказчика");
+
+        EdCustomerController controller = loader.getController();
+        controller.setDialogStage(addCustomerStage);
+
+        controller.setIdField(String.valueOf(selectedItem.getId()));
+        controller.setNameField(selectedItem.getName());
+        controller.setSurnameField(selectedItem.getSurname());
+        controller.setPatronymicField(selectedItem.getPatronymic());
+        controller.setPhoneField(selectedItem.getPhone());
+        controller.setEmailField(selectedItem.getEmail());
+
+        addCustomerStage.showAndWait();
+
+        if (controller.getResult() != null) {
+            customers.set(customers.indexOf(selectedItem), controller.getResult());
+            tableCustomers.refresh();
+            buttonBarSaveCancel.setVisible(true);
         }
-
-        if(idField.getText().isEmpty()) {
-            idField.setText("0");
-        }
-
-        try {
-            Customer customer = new Customer(Integer.parseInt(idField.getText()), nameField.getText().trim(), surnameField.getText().trim(), patronymicField.getText().trim(),
-                    phoneField.getText().trim(), emailField.getText().trim());
-            customers.set(customers.indexOf(selectedItem), customer);
-        } catch (Exception e) {
-            getAlert("warning", "Проверьте введенные значения!");
-            return;
-        }
-        tableCustomers.refresh();
-
-        idField.clear();
-        nameField.clear();
-        surnameField.clear();
-        patronymicField.clear();
-        phoneField.clear();
-        emailField.clear();
-
         edMode(false);
-
-        buttonBarSaveCancel.setVisible(true);
     }
 
     @FXML //кнопка Удалить
-    void deleteButton() {
+    private void deleteButton() {
         selectedItem = tableCustomers.getSelectionModel().getSelectedItem();
         if (selectedItem == null) {
             getAlert("warning", "Сначала выберите элемент!");
@@ -292,16 +243,15 @@ public class ShowCustomersController {
         }
 
         Optional<ButtonType> result = getAlert("confirmation", "Вы действительно хотите удалить " + selectedItem.getName() + " " + selectedItem.getSurname() + "?");
-        if (result.isPresent() && result.get() == ButtonType.OK) {
+        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.YES) {
             customers.remove(selectedItem);
-
+            setFilters();
             buttonBarSaveCancel.setVisible(true);
         }
-
     }
 
     @FXML
-    void saveChanges() throws InterruptedException {
+    private void saveChanges() throws InterruptedException {
         List<?> customersList = new ArrayList<>(customers);
 
         conn.sendRequest("update customers");
@@ -320,11 +270,11 @@ public class ShowCustomersController {
     }
 
     @FXML
-    void cancelChanges() {
+    private void cancelChanges() {
         Optional<ButtonType> result = getAlert("confirmation", "Вы действительно хотите отменить изменения?");
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-
+        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.YES) {
             initialize();
+            setFilters();
             buttonBarSaveCancel.setVisible(false);
         }
     }

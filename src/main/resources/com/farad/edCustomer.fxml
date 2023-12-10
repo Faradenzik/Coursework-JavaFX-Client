@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="380.0" prefWidth="240.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.farad.EdCustomerController">
+   <children>
+      <TextField fx:id="idField" layoutX="46.0" layoutY="41.0" promptText="ID" />
+      <TextField fx:id="surnameField" layoutX="46.0" layoutY="86.0" promptText="Фамилия" />
+      <TextField fx:id="nameField" layoutX="46.0" layoutY="131.0" promptText="Имя" />
+      <TextField fx:id="patronymicField" layoutX="46.0" layoutY="176.0" promptText="Отчество" />
+      <TextField fx:id="phoneField" layoutX="46.0" layoutY="221.0" promptText="Телефон" />
+      <TextField fx:id="emailField" layoutX="46.0" layoutY="266.0" promptText="E-mail" />
+      <Button defaultButton="true" layoutX="70.0" layoutY="337.0" mnemonicParsing="false" onAction="#save" text="Сохранить">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
+      <Button cancelButton="true" layoutX="162.0" layoutY="337.0" mnemonicParsing="false" onAction="#cancel" text="Отмена">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

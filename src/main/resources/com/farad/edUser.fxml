@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="300.0" prefWidth="240.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.farad.EdUserController">
+   <children>
+      <TextField fx:id="idField" layoutX="46.0" layoutY="41.0" promptText="ID" />
+      <TextField fx:id="usernameField" layoutX="46.0" layoutY="86.0" promptText="Username" />
+      <TextField fx:id="passwordField" layoutX="46.0" layoutY="131.0" promptText="Password" />
+      <TextField fx:id="roleField" layoutX="46.0" layoutY="176.0" promptText="Role" />
+      <Button defaultButton="true" layoutX="73.0" layoutY="254.0" mnemonicParsing="false" onAction="#save" text="Сохранить">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
+      <Button cancelButton="true" layoutX="167.0" layoutY="254.0" mnemonicParsing="false" onAction="#cancel" text="Отмена">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

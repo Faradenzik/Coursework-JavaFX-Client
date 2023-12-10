@@ -1,18 +1,19 @@
 package com.farad;
 
-import com.farad.tables.Customer;
 import com.farad.tables.User;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,28 +56,10 @@ public class ShowUsersController {
     public ButtonBar buttonBarSaveCancel;
 
     @FXML
-    private Pane creatingPane;
-
-    @FXML
     private Pane filtersPane;
 
     @FXML
     private Button addButton;
-
-    @FXML
-    private Button saveButton;
-
-    @FXML
-    private TextField idField;
-
-    @FXML
-    private TextField usernameField;
-
-    @FXML
-    private TextField passwordField;
-
-    @FXML
-    private TextField roleField;
 
     @FXML
     private TextField idFilterField;
@@ -94,6 +77,10 @@ public class ShowUsersController {
     private ObservableList<User> users;
     private ObservableList<User> filteredList;
     private final ChangeListener<String> textChangeListener = (observable, oldValue, newValue) -> {
+        setFilters();
+    };
+
+    private void setFilters() {
         String id = idFilterField.getText().trim();
         String username = usernameFilterField.getText().trim();
         String password = passwordFilterField.getText().trim();
@@ -111,10 +98,9 @@ public class ShowUsersController {
         } else {
             tableUsers.setItems(filteredList);
         }
-    };
+    }
 
-
-    public void setTable(List<User> userList) {
+    private void setTable(List<User> userList) {
         users = FXCollections.observableList(userList);
 
         idTable.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -144,15 +130,13 @@ public class ShowUsersController {
         roleFilterField.textProperty().addListener(textChangeListener);
     }
 
-    void edMode(boolean tf) {
+    private void edMode(boolean tf) {
         if (tf) {
-            creatingPane.setVisible(true);
             addButton.setDisable(true);
             buttonBarChangeDel.setDisable(true);
             buttonBarSaveCancel.setDisable(true);
             filtersPane.setDisable(true);
         } else {
-            creatingPane.setVisible(false);
             addButton.setDisable(false);
             buttonBarChangeDel.setDisable(false);
             buttonBarSaveCancel.setDisable(false);
@@ -161,102 +145,76 @@ public class ShowUsersController {
     }
 
     @FXML //кнопка Добавить
-    void addButton() {
+    private void addButton() throws IOException {
         edMode(true);
 
-        saveButton.setOnAction(this::createUser);
-    }
+        Stage addUserStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("edUser.fxml"));
 
-    void createUser(ActionEvent event) {
-        if (usernameField.getText().isEmpty() || passwordField.getText().isEmpty() || roleField.getText().isEmpty()) {
-            getAlert("warning", "Заполните поля!");
-            return;
+        Parent root = loader.load();
+        Scene scene = new Scene(root, 240, 300);
+
+        addUserStage.setScene(scene);
+        addUserStage.setResizable(false);
+        addUserStage.initModality(Modality.APPLICATION_MODAL);
+        addUserStage.setTitle("Создание пользователя");
+
+        EdUserController controller = loader.getController();
+        controller.setDialogStage(addUserStage);
+
+        addUserStage.showAndWait();
+
+        if (controller.getResult() != null) {
+            users.add(controller.getResult());
+            setFilters();
+            buttonBarSaveCancel.setVisible(true);
         }
 
-        if (idField.getText().isEmpty()) {
-            idField.setText("0");
-        }
-
-        try {
-            User user = new User(Integer.parseInt(idField.getText().trim()), usernameField.getText().trim(),
-                    passwordField.getText().trim(), roleField.getText().trim());
-            users.add(user);
-        } catch(Exception e) {
-            getAlert("warning", "Проверьте введенные значения!");
-            return;
-        }
-
-        idField.clear();
-        usernameField.clear();
-        passwordField.clear();
-        roleField.clear();
-
-        edMode(false);
-
-        buttonBarSaveCancel.setVisible(true);
-    }
-
-    @FXML //кнопка Отмена в временной панельке
-    void cancel() {
-        idField.clear();
-        usernameField.clear();
-        passwordField.clear();
-        roleField.clear();
-        
         edMode(false);
     }
 
     @FXML //кнопка Изменить
-    void changeButton() {
+    private void changeButton() throws IOException {
         selectedItem = tableUsers.getSelectionModel().getSelectedItem();
         if (selectedItem == null) {
             getAlert("warning", "Сначала выберите элемент");
             return;
         }
 
-        idField.setText(String.valueOf(selectedItem.getId()));
-        usernameField.setText(selectedItem.getUsername());
-        passwordField.setText(selectedItem.getPassword());
-        roleField.setText(String.valueOf(selectedItem.getRole()));
-
         edMode(true);
 
-        saveButton.setOnAction(this::changeUser);
-    }
+        Stage addUserStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("edUser.fxml"));
 
-    void changeUser(ActionEvent event) {
-        if (usernameField.getText().isEmpty() || passwordField.getText().isEmpty() || roleField.getText().isEmpty()) {
-            getAlert("warning", "Заполните поля!");
-            return;
+        Parent root = loader.load();
+        Scene scene = new Scene(root, 240, 300);
+
+        addUserStage.setScene(scene);
+        addUserStage.setResizable(false);
+        addUserStage.initModality(Modality.APPLICATION_MODAL);
+        addUserStage.setTitle("Редактор пользователя");
+
+        EdUserController controller = loader.getController();
+        controller.setDialogStage(addUserStage);
+
+        controller.setIdField(String.valueOf(selectedItem.getId()));
+        controller.setUsernameField(selectedItem.getUsername());
+        controller.setPasswordField(selectedItem.getPassword());
+        controller.setRoleField(selectedItem.getRole());
+
+        addUserStage.showAndWait();
+
+        if (controller.getResult() != null) {
+            users.set(users.indexOf(selectedItem), controller.getResult());
+            tableUsers.refresh();
+            buttonBarSaveCancel.setVisible(true);
         }
-
-        if (idField.getText().isEmpty()) {
-            idField.setText("0");
-        }
-
-        try {
-            User user = new User(Integer.parseInt(idField.getText().trim()), usernameField.getText().trim(),
-                    passwordField.getText().trim(), roleField.getText().trim());
-            users.set(users.indexOf(selectedItem), user);
-        } catch(Exception e) {
-            getAlert("warning", "Проверьте введенные значения!");
-            return;
-        }
-
-        tableUsers.refresh();
-
-        idField.clear();
-        usernameField.clear();
-        passwordField.clear();
-        roleField.clear();
 
         edMode(false);
-
-        buttonBarSaveCancel.setVisible(true);
     }
 
     @FXML //кнопка Удалить
-    void deleteButton() {
+    private void deleteButton() {
         selectedItem = tableUsers.getSelectionModel().getSelectedItem();
         if (selectedItem == null) {
             getAlert("warning", "Сначала выберите элемент!");
@@ -264,16 +222,15 @@ public class ShowUsersController {
         }
 
         Optional<ButtonType> result = getAlert("confirmation", "Вы действительно хотите удалить " + selectedItem.getUsername() + "?");
-        if (result.isPresent() && result.get() == ButtonType.OK) {
+        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.YES) {
             users.remove(selectedItem);
-
+            setFilters();
             buttonBarSaveCancel.setVisible(true);
         }
-
     }
 
     @FXML
-    void saveChanges() throws InterruptedException {
+    private void saveChanges() throws InterruptedException {
         List<?> usersList = new ArrayList<>(users);
 
         conn.sendRequest("update users");
@@ -292,11 +249,11 @@ public class ShowUsersController {
     }
 
     @FXML
-    void cancelChanges() {
+    private void cancelChanges() {
         Optional<ButtonType> result = getAlert("confirmation", "Вы действительно хотите отменить изменения?");
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-
+        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.YES) {
             initialize();
+            setFilters();
             buttonBarSaveCancel.setVisible(false);
         }
     }

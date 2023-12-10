@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.farad.ShowUsersController">
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.farad.ShowUsersController">
    <children>
       <TableView fx:id="tableUsers" editable="true" layoutX="236.0" layoutY="66.0" prefHeight="361.0" prefWidth="732.0" tableMenuButtonVisible="true" AnchorPane.leftAnchor="236.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="66.0">
         <columns>
@@ -42,24 +36,6 @@
             <Font name="Comic Sans MS" size="17.0" />
          </font>
       </Button>
-      <Pane fx:id="creatingPane" layoutX="62.0" layoutY="504.0" prefHeight="274.0" prefWidth="318.0" visible="false">
-         <children>
-            <TextField fx:id="idField" layoutX="15.0" layoutY="57.0" prefHeight="25.0" prefWidth="120.0" promptText="ID" />
-            <TextField fx:id="usernameField" layoutX="15.0" layoutY="102.0" prefHeight="25.0" prefWidth="120.0" promptText="Username" />
-            <TextField fx:id="passwordField" layoutX="14.0" layoutY="147.0" prefHeight="25.0" prefWidth="120.0" promptText="Password" />
-            <TextField fx:id="roleField" layoutX="14.0" layoutY="192.0" prefHeight="25.0" prefWidth="120.0" promptText="Role" />
-            <Button fx:id="saveButton" alignment="CENTER" contentDisplay="TOP" layoutX="177.0" layoutY="91.0" minWidth="38.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="120.0" text="Сохранить">
-               <font>
-                  <Font name="Comic Sans MS" size="17.0" />
-               </font>
-            </Button>
-            <Button fx:id="cancelButton" alignment="CENTER" contentDisplay="TOP" layoutX="194.0" layoutY="147.0" minWidth="38.0" mnemonicParsing="false" onAction="#cancel" prefHeight="36.0" prefWidth="86.0" text="Отмена">
-               <font>
-                  <Font name="Comic Sans MS" size="17.0" />
-               </font>
-            </Button>
-         </children>
-      </Pane>
       <ButtonBar fx:id="buttonBarSaveCancel" layoutX="775.0" layoutY="738.0" prefHeight="40.0" prefWidth="200.0" visible="false" AnchorPane.rightAnchor="25.0">
         <buttons>
           <Button mnemonicParsing="false" onAction="#saveChanges" text="Сохранить" />

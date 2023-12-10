@@ -28,7 +28,7 @@
             <Font size="17.0" />
          </font>
       </PasswordField>
-      <Button layoutX="282.0" layoutY="320.0" maxHeight="40" maxWidth="210" minHeight="40" minWidth="210" mnemonicParsing="false" onAction="#enterButtonOnPressed" prefHeight="50.0" prefWidth="140.0" style="-fx-background-color: #FAD02C;" text="Вход" AnchorPane.leftAnchor="282.0" AnchorPane.rightAnchor="278.0" AnchorPane.topAnchor="320.0">
+      <Button defaultButton="true" layoutX="282.0" layoutY="320.0" maxHeight="40" maxWidth="210" minHeight="40" minWidth="210" mnemonicParsing="false" onAction="#enterButtonOnPressed" prefHeight="50.0" prefWidth="140.0" style="-fx-background-color: #FAD02C;" text="Вход" AnchorPane.leftAnchor="282.0" AnchorPane.rightAnchor="278.0" AnchorPane.topAnchor="320.0">
          <font>
             <Font name="Comic Sans MS Bold" size="20.0" />
          </font>

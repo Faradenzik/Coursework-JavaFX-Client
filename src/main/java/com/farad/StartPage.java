@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
@@ -40,14 +41,21 @@ public class StartPage extends Application {
         switch (type) {
             case "warning": {
                 alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Внимание");
                 break;
             }
             case "error": {
                 alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Ошибка");
                 break;
             }
             case "confirmation": {
+                ButtonType yes = new ButtonType("Да", ButtonBar.ButtonData.YES);
+                ButtonType no = new ButtonType("Нет", ButtonBar.ButtonData.NO);
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.getButtonTypes().setAll(yes, no);
+                alert.setTitle("Подтверждение");
+
                 break;
             }
         }
