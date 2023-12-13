@@ -1,5 +1,6 @@
-package com.farad;
+package com.farad.controllers;
 
+import com.farad.db.Connection;
 import com.farad.tables.User;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -197,10 +198,7 @@ public class ShowUsersController {
         EdUserController controller = loader.getController();
         controller.setDialogStage(addUserStage);
 
-        controller.setIdField(String.valueOf(selectedItem.getId()));
-        controller.setUsernameField(selectedItem.getUsername());
-        controller.setPasswordField(selectedItem.getPassword());
-        controller.setRoleField(selectedItem.getRole());
+        controller.setFields(selectedItem.getUsername(), selectedItem.getPassword(), selectedItem.getRole());
 
         addUserStage.showAndWait();
 

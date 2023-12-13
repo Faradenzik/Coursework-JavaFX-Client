@@ -1,11 +1,11 @@
-package com.farad;
+package com.farad.controllers;
 
+import com.farad.db.Connection;
 import com.farad.tables.Customer;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -217,12 +217,7 @@ public class ShowCustomersController {
         EdCustomerController controller = loader.getController();
         controller.setDialogStage(addCustomerStage);
 
-        controller.setIdField(String.valueOf(selectedItem.getId()));
-        controller.setNameField(selectedItem.getName());
-        controller.setSurnameField(selectedItem.getSurname());
-        controller.setPatronymicField(selectedItem.getPatronymic());
-        controller.setPhoneField(selectedItem.getPhone());
-        controller.setEmailField(selectedItem.getEmail());
+        controller.setFields(selectedItem.getName(), selectedItem.getSurname(), selectedItem.getPatronymic(), selectedItem.getPhone(), selectedItem.getEmail());
 
         addCustomerStage.showAndWait();
 

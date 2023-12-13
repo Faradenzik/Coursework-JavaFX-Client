@@ -1,11 +1,11 @@
-package com.farad;
+package com.farad.controllers;
 
 import java.io.IOException;
 
+import com.farad.db.Connection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import static com.farad.StartPage.getAlert;
 
 public class StartPageController {
+    public static String username;
     private Stage primaryStage;
     @FXML
     private TextField loginField;
@@ -43,24 +44,21 @@ public class StartPageController {
 
                 if (answer.equals("success")) {
                     String role = conn.getRequest();
+                    username = loginField.getText().trim();
 
-                    switch(role) {
-                        case "admin": {
-                            Stage newStage = new Stage();
-                            FXMLLoader loader = new FXMLLoader(getClass().getResource("admin-page.fxml"));
+                    Stage newStage = new Stage();
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("admin-page.fxml"));
 
-                            Parent root = loader.load();
-                            Scene scene = new Scene(root, 1500, 800);
+                    Parent root = loader.load();
+                    Scene scene = new Scene(root, 1500, 800);
 
-                            newStage.setScene(scene);
-                            newStage.setTitle("Admin Panel: " + loginField.getText().trim());
+                    newStage.setScene(scene);
+                    newStage.setTitle(role + " panel: " + username);
+                    AdminPageController adminController = loader.getController();;
+                    adminController.initialize(role);
 
-                            primaryStage.close();
-                            newStage.show();
-
-                            break;
-                        }
-                    }
+                    primaryStage.close();
+                    newStage.show();
                 } else {
                     getAlert("error", "Проверьте правильность введенных данных");
                 }

@@ -1,5 +1,6 @@
-package com.farad;
+package com.farad.controllers;
 
+import com.farad.db.Connection;
 import com.farad.tables.Car;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -300,14 +301,9 @@ public class ShowCarsController {
         EdCarController controller = loader.getController();
         controller.setDialogStage(addCarStage);
 
-        controller.setIdField(String.valueOf(selectedItem.getId()));
-        controller.setBrandField(selectedItem.getBrand());
-        controller.setModelField(selectedItem.getModel());
-        controller.setEquipmentField(selectedItem.getEquipment());
-        controller.setColorField(selectedItem.getColor());
-        controller.setFuelField(selectedItem.getFuel());
-        controller.setPriceField(String.valueOf(selectedItem.getPrice()));
-        controller.setAmountField(String.valueOf(selectedItem.getAmount()));
+        controller.setFields(selectedItem.getBrand(), selectedItem.getModel(),
+                selectedItem.getEquipment(), selectedItem.getColor(), selectedItem.getFuel(),
+                selectedItem.getPrice(), selectedItem.getAmount());
 
         addCarStage.showAndWait();
 
@@ -338,11 +334,11 @@ public class ShowCarsController {
 
     @FXML
     private void saveChanges() throws InterruptedException {
-        List<?> customersList = new ArrayList<>(cars);
+        List<Car> carsList = new ArrayList<>(cars);
 
         conn.sendRequest("update cars");
         Thread.sleep(100);
-        conn.sendObjects(customersList);
+        conn.sendObjects(carsList);
 
         String result = conn.getRequest();
         if (result.equals("success")) {

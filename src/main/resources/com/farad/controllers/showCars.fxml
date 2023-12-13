@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.farad.ShowCarsController">
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.farad.controllers.ShowCarsController">
     <children>
         <TableView fx:id="tableCars" editable="true" layoutX="236.0" layoutY="66.0" prefHeight="361.0" prefWidth="732.0" tableMenuButtonVisible="true" AnchorPane.leftAnchor="236.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="66.0">
             <columns>
@@ -29,7 +29,7 @@
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
             </columnResizePolicy>
         </TableView>
-        <ButtonBar fx:id="buttonBarChangeDel" layoutX="640.0" layoutY="448.0" AnchorPane.rightAnchor="25.0">
+        <ButtonBar fx:id="buttonBarChangeDel" layoutX="705.0" layoutY="448.0" AnchorPane.rightAnchor="25.0">
             <buttons>
                 <Button alignment="CENTER" contentDisplay="TOP" minWidth="38.0" mnemonicParsing="false" onAction="#changeButton" prefHeight="43.0" prefWidth="120.0" text="Изменить" textAlignment="CENTER">
                     <font>

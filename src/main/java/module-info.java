@@ -8,4 +8,8 @@ module com.farad.client {
     exports com.farad;
     exports com.farad.tables;
     opens com.farad.tables to javafx.fxml;
+    exports com.farad.controllers;
+    opens com.farad.controllers to javafx.fxml;
+    exports com.farad.db;
+    opens com.farad.db to javafx.fxml;
 }

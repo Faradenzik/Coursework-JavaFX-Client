@@ -1,4 +1,4 @@
-package com.farad;
+package com.farad.controllers;
 
 import com.farad.tables.Customer;
 import javafx.fxml.FXML;
@@ -10,9 +10,6 @@ import static com.farad.StartPage.getAlert;
 public class EdCustomerController {
     @FXML
     private TextField emailField;
-
-    @FXML
-    private TextField idField;
 
     @FXML
     private TextField nameField;
@@ -46,12 +43,8 @@ public class EdCustomerController {
             return;
         }
 
-        if(idField.getText().isEmpty()) {
-            idField.setText("0");
-        }
-
         try {
-            id = Integer.parseInt(idField.getText().trim());
+            id = 0;
             name = nameField.getText().trim();
             surname = surnameField.getText().trim();
             patronymic = patronymicField.getText().trim();
@@ -75,12 +68,16 @@ public class EdCustomerController {
         return result;
     }
 
-    public void setEmailField(String s) {
-        emailField.setText(s);
+    void setFields(String name, String surname, String patronymic, String phone, String email) {
+        setNameField(name);
+        setSurnameField(surname);
+        setPatronymicField(patronymic);
+        setPhoneField(phone);
+        setEmailField(email);
     }
 
-    public void setIdField(String s) {
-        idField.setText(s);
+    public void setEmailField(String s) {
+        emailField.setText(s);
     }
 
     public void setNameField(String s) {

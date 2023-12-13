@@ -1,4 +1,4 @@
-package com.farad;
+package com.farad.controllers;
 
 import com.farad.tables.Car;
 import javafx.fxml.FXML;
@@ -22,9 +22,6 @@ public class EdCarController {
 
     @FXML
     private TextField fuelField;
-
-    @FXML
-    private TextField idField;
 
     @FXML
     private TextField modelField;
@@ -53,12 +50,8 @@ public class EdCarController {
             return;
         }
 
-        if(idField.getText().isEmpty()) {
-            idField.setText("0");
-        }
-
         try {
-            id = Integer.parseInt(idField.getText().trim());
+            id = 0;
             brand = brandField.getText().trim();
             model = modelField.getText().trim();
             equipment = equipmentField.getText().trim();
@@ -84,6 +77,16 @@ public class EdCarController {
         return result;
     }
 
+    void setFields(String brand, String model, String equipment, String color, String fuel, int price, int amount) {
+        setBrandField(brand);
+        setModelField(model);
+        setEquipmentField(equipment);
+        setColorField(color);
+        setFuelField(fuel);
+        setPriceField(String.valueOf(price));
+        setAmountField(String.valueOf(amount));
+    }
+
     public void setAmountField(String s) {
         amountField.setText(s);
     }
@@ -102,10 +105,6 @@ public class EdCarController {
 
     public void setFuelField(String s) {
         fuelField.setText(s);
-    }
-
-    public void setIdField(String s) {
-        idField.setText(s);
     }
 
     public void setModelField(String s) {

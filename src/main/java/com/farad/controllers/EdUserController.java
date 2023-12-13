@@ -1,4 +1,4 @@
-package com.farad;
+package com.farad.controllers;
 
 import com.farad.tables.User;
 import javafx.fxml.FXML;
@@ -8,9 +8,6 @@ import javafx.stage.Stage;
 import static com.farad.StartPage.getAlert;
 
 public class EdUserController {
-    @FXML
-    private TextField idField;
-
     @FXML
     private TextField usernameField;
 
@@ -38,12 +35,9 @@ public class EdUserController {
             getAlert("warning", "Заполните поля!");
             return;
         }
-        if (idField.getText().isEmpty()) {
-            idField.setText("0");
-        }
 
         try {
-            id = Integer.parseInt(idField.getText().trim());
+            id = 0;
             username = usernameField.getText().trim();
             password = passwordField.getText().trim();
             role = roleField.getText().toLowerCase().trim();
@@ -65,8 +59,10 @@ public class EdUserController {
         return result;
     }
 
-    public void setIdField(String s) {
-        idField.setText(s);
+    void setFields(String username, String password, String role) {
+        setUsernameField(username);
+        setPasswordField(password);
+        setRoleField(role);
     }
 
     public void setUsernameField(String s) {

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="446.0" prefWidth="240.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.farad.controllers.EdCarController">
+   <children>
+      <TextField fx:id="brandField" layoutX="46.0" layoutY="39.0" promptText="Марка" />
+      <TextField fx:id="modelField" layoutX="46.0" layoutY="84.0" promptText="Модель" />
+      <TextField fx:id="equipmentField" layoutX="46.0" layoutY="129.0" promptText="Комплектация" />
+      <TextField fx:id="colorField" layoutX="46.0" layoutY="174.0" promptText="Цвет" />
+      <TextField fx:id="fuelField" layoutX="46.0" layoutY="219.0" promptText="Топливо" />
+      <TextField fx:id="priceField" layoutX="46.0" layoutY="264.0" promptText="Цена" />
+      <TextField fx:id="amountField" layoutX="46.0" layoutY="309.0" promptText="Количество" />
+      <Button defaultButton="true" layoutX="68.0" layoutY="399.0" mnemonicParsing="false" onAction="#save" text="Сохранить">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
+      <Button cancelButton="true" layoutX="162.0" layoutY="399.0" mnemonicParsing="false" onAction="#cancel" text="Отмена">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

@@ -1,4 +1,4 @@
-package com.farad;
+package com.farad.db;
 
 import java.io.*;
 import java.net.Socket;

@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.farad.ShowUsersController">
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.farad.controllers.ShowUsersController">
    <children>
       <TableView fx:id="tableUsers" editable="true" layoutX="236.0" layoutY="66.0" prefHeight="361.0" prefWidth="732.0" tableMenuButtonVisible="true" AnchorPane.leftAnchor="236.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="66.0">
         <columns>
